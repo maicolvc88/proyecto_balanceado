@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Clonar repositorio'){
+        stage ('Clonar repositorio'){
             steps {
                 git branch: 'master', credentialsId: 'git-jenkins', url: 'https://github.com/maicolvc88/proyecto_balanceado.git'
             }
@@ -26,7 +26,7 @@ pipeline {
                             string(credentialsId: 'MONGO_URI', variable: 'MONGO_URI')
                         ]) {
                             sh """
-                            docker build --build-arg MONGO_URI=${MONGO_URI} -t proyectos-micros-2
+                            docker build --build-arg MONGO_URI=${MONGO_URI} -t docker-compose.yml .
                             """  
                         }
                     }
@@ -43,11 +43,25 @@ pipeline {
                     }
                 }
         }
-        stage('Desplegar contenedor docker'){
+        stage('Desplegar contenedores Docker'){
             steps {
                 script {
                     withCredentials([
                             string(credentialsId: 'MONGO_URI', variable: 'MONGO_URI')
+                    ]) {
+                        sh """
+                            docker-compose -f docker-compose.yml up -d
+                        """
+                    }
+                }
+            }
+            
+        }
+        stage('Desplegar contenedor docker'){
+            steps {
+                script {
+                    withCredentials ([
+                        String (credentialsId: 'MONGO_URI', variable: 'MONGO_URI')
                     ]) {
                         sh """
                             docker-compose -f docker-compose.yml up -d -e MONGO_URI=mongodb+srv://admin:5KuozYQlmFeBz1nd@cluster0.fht34da.mongodb.net/ -e PORT=4002
