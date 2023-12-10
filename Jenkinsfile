@@ -34,16 +34,4 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            emailext {
-                subject: "Estado del build: ${currentBuild.currentResult}",
-                body: "Se ha completado el build, accede a los detalles en ${env.BUILD_URL}",
-                to: 'maicolvc88@gmail.com',
-                from: 'jenkins@iudigital.edu.co'
-
-            }
-        }
-    }
 }
