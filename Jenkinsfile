@@ -9,25 +9,26 @@ pipeline {
             }
         }
         stage ('Construir imagen de docker') {
-            steps {
-                script {
-                    withCredentials ([
-                        String (credentialsId: 'MONGO_URI', variable: 'MONGO_URI')
-                    ]) {
-                        docker.build('proyectos-micros:v1', "--build-arg MONGO_URI=${MONGO_URI} .")
+             steps {
+                    script {
+                        withCredentials([
+                            string(credentialsId: 'MONGO_URI', variable: 'MONGO_URI')
+                        ]) {
+                            sh """
+                            docker build --build-arg MONGO_URI=${MONGO_URI} -t proyectos-micros:v1 .
+                            """  
+                        }
                     }
                 }
-            }
         }
         stage('Desplegar contenedor docker'){
             steps {
                 script {
-                    withCredentials ([
-                        String (credentialsId: 'MONGO_URI', variable: 'MONGO_URI')
+                    withCredentials([
+                            string(credentialsId: 'MONGO_URI', variable: 'MONGO_URI')
                     ]) {
                         sh """
-                            sed '${MONGO_URI}' docker-compose.yml > docker-compose-update.yml
-                            docker.compose -f docker-compose-update.yml up -d
+                            docker-compose -f docker-compose.yml up -d
                         """
                     }
                 }
