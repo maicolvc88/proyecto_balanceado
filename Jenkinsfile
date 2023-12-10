@@ -8,14 +8,36 @@ pipeline {
                 git branch: 'master', credentialsId: 'git-jenkins', url: 'https://github.com/maicolvc88/proyecto_balanceado.git'
             }
         }
-        stage ('Construir imagen de docker') {
-             steps {
+       stage('Construir image de docker'){
+            steps {
                     script {
                         withCredentials([
                             string(credentialsId: 'MONGO_URI', variable: 'MONGO_URI')
                         ]) {
                             sh """
                             docker build --build-arg MONGO_URI=${MONGO_URI} -t proyectos-micros:v1 .
+                            """  
+                        }
+                    }
+                }
+                steps {
+                    script {
+                        withCredentials([
+                            string(credentialsId: 'MONGO_URI', variable: 'MONGO_URI')
+                        ]) {
+                            sh """
+                            docker build --build-arg MONGO_URI=${MONGO_URI} -t docker-compose.yml .
+                            """  
+                        }
+                    }
+                }
+                steps {
+                    script {
+                        withCredentials([
+                            string(credentialsId: 'MONGO_URI', variable: 'MONGO_URI')
+                        ]) {
+                            sh """
+                            docker build --build-arg MONGO_URI=${MONGO_URI} -t loader-balancer .
                             """  
                         }
                     }
