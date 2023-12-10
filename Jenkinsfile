@@ -26,7 +26,7 @@ pipeline {
                             string(credentialsId: 'MONGO_URI', variable: 'MONGO_URI')
                         ]) {
                             sh """
-                            docker build --build-arg MONGO_URI=${MONGO_URI} -t docker-compose.yml .
+                            docker build --build-arg MONGO_URI=${MONGO_URI} -t proyectos-micros-2
                             """  
                         }
                     }
