@@ -27,9 +27,6 @@ services:
       - "4003:80"
     networks:
       - proyectos-app
-    enviroments:
-      - MONGO_URI='mongodb+srv://admin:5KuozYQlmFeBz1nd@cluster0.fht34da.mongodb.net/'
-      - PORT=4002
     
 networks:
   proyectos-app: 
